@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>Codex Manager</title>
+  <link rel="icon" type="image/svg+xml" href="/codex-manager-mark.svg">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+  <script src="/vendor/cytoscape.min.js" defer></script>
+  <script src="/workspace-graph.js" defer></script>
+  <script src="/workspace.js" defer></script>
+  <script src="/catalog.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="app-sidebar" aria-label="Navigation principale">
+      <a class="brand" href="#overview" aria-label="Codex Manager, vue d’ensemble">
+        <img class="brand-mark" src="/codex-manager-mark.svg" alt="" width="24" height="24">
+        <span>Codex</span><span class="brand-subtitle">Manager</span>
+      </a>
+      <nav class="sidebar-nav" aria-label="Sections">
+        <div class="sidebar-nav-group">
+          <span class="sidebar-label">DASHBOARD</span>
+          <div class="sidebar-nav-items">
+            <a class="sidebar-link is-current" href="#overview" data-section="overview" aria-current="location"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>Vue d’ensemble</span></a>
+            <a class="sidebar-link" href="#environments" data-section="environments"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>Comptes et fenêtres</span></a>
+            <a class="sidebar-link" href="#project-usage" data-section="project-usage"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21v-6M12 21V3M19 21V9"/></svg><span>Consommation par projet</span></a>
+            <a class="sidebar-link" href="#catalog" data-section="catalog"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1"/></svg><span>Composants et chats</span></a>
+            <a class="sidebar-link" href="#integrations" data-section="integrations"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-5M15 8V2M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1zM9 8V2"/></svg><span>Intégrations</span></a>
+            <a class="sidebar-link" href="#preferences-panel" data-section="preferences-panel"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg><span>Alertes et seuils</span></a>
+            <a class="sidebar-link" href="#history-panel" data-section="history-panel"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6h4"/></svg><span>Activité récente</span></a>
+          </div>
+        </div>
+        <div class="sidebar-workspace-group">
+          <span class="sidebar-label sidebar-workspace-label"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg>WORKSPACE MCP</span>
+          <div class="sidebar-workspace-items">
+            <a class="sidebar-link" href="#workspace-kanban" data-section="workspace-kanban"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg><span>Kanban</span></a>
+            <a class="sidebar-link" href="#workspace-chat" data-section="workspace-chat"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/><path d="M8 12h.01"/><path d="M12 12h.01"/><path d="M16 12h.01"/></svg><span>Chat</span></a>
+          </div>
+        </div>
+      </nav>
+      <div class="sidebar-account-group">
+        <span class="sidebar-label">COMPTES</span>
+        <div id="sidebar-accounts" class="sidebar-accounts"></div>
+      </div>
+      <div class="sidebar-bottom">
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Changer le thème">Apparence</button>
+        <span>Données locales</span>
+      </div>
+    </aside>
+
+    <div class="app-workspace">
+      <header class="app-header">
+        <div class="header-inner">
+          <span class="header-location">Codex <span aria-hidden="true">/</span> <span id="header-view">Dashboard</span></span>
+          <div class="header-actions">
+            <span id="connection" class="connection" role="status">Connexion…</span>
+            <button id="notifications" class="notification-button" type="button">Activer les alertes</button>
+          </div>
+        </div>
+      </header>
+
+      <main id="dashboard-page" class="page">
+        <div class="page-heading">
+          <div>
+            <h1>Vue d’ensemble</h1>
+            <p class="page-description">Agents, fenêtres et consommation de vos comptes.</p>
+          </div>
+          <div class="page-meta"><span id="mode">Chargement…</span><span id="last-refresh">Mise à jour en cours…</span></div>
+        </div>
+
+        <section id="overview" class="overview" aria-label="Situation actuelle"></section>
+
+        <section id="environments" class="environments" aria-labelledby="environments-title">
+          <div class="section-heading"><h2 id="environments-title">Comptes et fenêtres</h2><p>Quotas et activité en direct</p></div>
+          <div id="accounts" class="accounts" aria-live="polite"></div>
+        </section>
+
+        <section id="project-usage" class="project-usage" aria-labelledby="project-usage-title">
+          <div class="section-heading"><h2 id="project-usage-title">Consommation par projet</h2><p>Tokens observés sur chaque compte</p></div>
+          <div id="project-usage-accounts" class="project-usage-accounts" aria-live="polite"></div>
+          <p class="project-usage-note">Le suivi commence à la première observation. Les historiques copiés entre comptes ne sont pas imputés une seconde fois ; ces chiffres peuvent donc être inférieurs au relevé officiel du compte.</p>
+        </section>
+
+        <section id="catalog" class="catalog" aria-labelledby="catalog-title">
+          <div class="section-heading"><h2 id="catalog-title">Composants et chats</h2><p>Inventaire local par compte</p></div>
+          <div id="catalog-accounts" class="catalog-accounts" aria-live="polite"><p class="empty">Chargement de l’inventaire…</p></div>
+          <div class="chat-browser">
+            <div class="chat-browser-head">
+              <div><h3>Conversations</h3><p>Recherchez, filtrez et organisez les chats de chaque compte.</p></div>
+              <div class="chat-browser-controls">
+                <label>Source <select id="chat-source"></select></label>
+                <label>Recherche <input id="chat-search" type="search" placeholder="Titre ou projet" autocomplete="off"></label>
+              </div>
+            </div>
+            <div class="chat-filter-bar" aria-label="Filtres des conversations">
+              <label>Vue <select id="chat-view"><option value="active">Actives</option><option value="archived">Archivées</option></select></label>
+              <label>Tokens min. <input id="chat-min-tokens" type="number" min="0" step="1" placeholder="0"></label>
+              <label>Tokens max. <input id="chat-max-tokens" type="number" min="0" step="1" placeholder="∞"></label>
+              <label>Depuis <input id="chat-date-from" type="date"></label>
+              <label>Jusqu’au <input id="chat-date-to" type="date"></label>
+              <button id="chat-clear-filters" type="button">Effacer les filtres</button>
+            </div>
+            <div class="chat-list-actions"><button id="chat-select-page" type="button">Sélectionner la page</button><button id="chat-deduplicate" type="button">Enlever les doublons</button><span id="chat-filter-count"></span></div>
+            <div id="chat-list" class="chat-list" aria-live="polite"><p class="empty">Chargement des conversations…</p></div>
+            <div class="chat-browser-footer">
+              <div class="chat-pagination"><button id="chats-previous" type="button">Précédent</button><span id="chats-range"></span><button id="chats-next" type="button">Suivant</button></div>
+              <div class="chat-transfer"><span id="chat-selection">0 sélectionné</span><label>Vers <select id="chat-target"></select></label><button id="chat-copy" type="button" disabled>Copier les chats</button><button id="chat-archive" type="button" disabled>Archiver la sélection</button><button id="chat-restore" type="button" disabled>Restaurer la sélection</button></div>
+            </div>
+            <p id="chat-message" class="chat-message" role="status">L’archivage conserve l’historique dans Codex ; la vue « Archivées » permet de le restaurer. La copie vers l’autre compte conserve aussi l’original.</p>
+          </div>
+        </section>
+
+        <section id="integrations" class="integrations" aria-labelledby="integrations-title">
+          <div class="section-heading"><h2 id="integrations-title">Intégrations</h2><p>Notifications externes</p></div>
+          <div class="integration-list">
+            <div id="integration-telegram" class="integration-row is-inactive"><img src="/telegram.svg" width="22" height="22" alt=""><span class="integration-name">Telegram</span><span class="integration-state">Vérification…</span></div>
+            <div class="integration-row is-inactive"><img src="/discord.svg" width="22" height="22" alt=""><span class="integration-name">Discord</span><span class="integration-state">À venir</span></div>
+            <div class="integration-row is-inactive"><img src="/whatsapp.svg" width="22" height="22" alt=""><span class="integration-name">WhatsApp</span><span class="integration-state">À venir</span></div>
+          </div>
+        </section>
+
+        <details id="preferences-panel" class="utility-panel">
+          <summary>Alertes et seuils <span>Réglages par compte · Telegram</span></summary>
+          <form id="preferences-form">
+            <div id="preferences-accounts" class="preferences-accounts"></div>
+            <div class="quiet-settings">
+              <label><input id="quiet-enabled" type="checkbox"> Plage silencieuse Telegram</label>
+              <label>De <input id="quiet-start" type="time" required></label>
+              <label>à <input id="quiet-end" type="time" required></label>
+            </div>
+            <p class="setting-help">Les réponses des chats sans goal, les changements de goal et les seuils survenus pendant la plage silencieuse sont envoyés à sa fin. Les réponses intermédiaires d'un goal ne déclenchent pas d'alerte. Les validations et erreurs restent immédiates.</p>
+            <div class="setting-actions"><button type="submit">Enregistrer les réglages</button><span id="settings-message" role="status"></span></div>
+          </form>
+        </details>
+
+        <details id="history-panel" class="utility-panel history-panel">
+          <summary>Activité récente <span>Changements d'état, goals et seuils</span></summary>
+          <ol id="history-list" class="history-list"></ol>
+        </details>
+
+        <details class="data-note">
+          <summary>Comprendre les données affichées</summary>
+          <div class="data-note-content">
+            <p>Une fenêtre disparaît environ une minute après son dernier signal de présence. Le pourcentage disponible désigne le quota de la fenêtre de temps indiqué, et non un solde monétaire.</p>
+            <p>Quand plusieurs fenêtres ouvrent le même projet, la conversation est signalée comme ambiguë sous le compte. Le goal vient de la conversation enregistrée ; l'activité du chat vient des hooks, du dernier tour connu ou d'une estimation locale identifiée. « Tâche arrêtée » signifie que le dernier travail de l’agent a été interrompu. Un goal ouvert peut attendre le prochain message sans agent au travail. « — » signifie que le relevé n'a pas été publié.</p>
+            <p>Le type d'abonnement est fourni par Codex. Sa date de renouvellement ou de fin n'est pas fournie par l'App Server ; elle se consulte dans les paramètres de facturation ChatGPT de chaque compte.</p>
+          </div>
+        </details>
+      </main>
+
+      <main id="workspace-page" class="page workspace-page" hidden>
+        <div class="page-heading">
+          <div>
+            <h1>Workspace MCP</h1>
+            <p class="page-description">Tâches partagées et communication entre sessions Codex.</p>
+          </div>
+          <div class="page-meta"><span id="workspace-mode">Chargement…</span></div>
+        </div>
+        <section id="workspace-kanban-view" class="workspace-kanban-view" aria-label="Kanban">
+          <div class="section-heading"><h2>Suivi du travail</h2><p id="workspace-task-summary">Chargement des tâches…</p></div>
+          <form id="workspace-task-form" class="workspace-task-form">
+            <label class="workspace-task-field" for="workspace-task-title">Nouvelle tâche<input id="workspace-task-title" name="title" maxlength="180" placeholder="Résultat attendu" required></label>
+            <label class="workspace-task-field" for="workspace-task-channel">Channel<select id="workspace-task-channel" required></select></label>
+            <label class="workspace-task-field" for="workspace-task-assignee">Responsable<select id="workspace-task-assignee"></select></label>
+            <label class="workspace-task-field workspace-task-description" for="workspace-task-description">Contexte et résultat attendu<textarea id="workspace-task-description" rows="2" maxlength="4000" placeholder="Livrable et critères de validation"></textarea></label>
+            <button type="submit">Créer la tâche</button><span id="workspace-task-form-status" role="status"></span>
+          </form>
+          <div class="workspace-task-filter"><label for="workspace-task-filter-channel">Afficher</label><select id="workspace-task-filter-channel"></select><span>Les agents peuvent prendre et mettre à jour leurs tâches via le MCP.</span></div>
+          <div id="workspace-kanban-board" class="workspace-kanban-board" aria-label="Tableau des tâches"></div>
+          <section id="workspace-task-detail" class="workspace-task-detail" hidden aria-label="Détail de la tâche sélectionnée">
+            <div class="workspace-task-detail-heading"><div><small id="workspace-task-detail-id"></small><h3 id="workspace-task-detail-title"></h3></div><button id="workspace-task-detail-close" type="button" aria-label="Fermer le détail">Fermer</button></div>
+            <p id="workspace-task-detail-description"></p>
+            <div class="workspace-task-detail-controls"><label for="workspace-task-detail-assignee">Responsable</label><select id="workspace-task-detail-assignee"></select><label for="workspace-task-detail-status">État</label><select id="workspace-task-detail-status"></select></div>
+            <form id="workspace-task-note-form"><label for="workspace-task-note">Note de progression</label><textarea id="workspace-task-note" rows="2" maxlength="2000" placeholder="Ce qui a changé, un blocage ou le résultat"></textarea><button type="submit">Ajouter une note</button><span id="workspace-task-note-status" role="status"></span></form>
+            <div id="workspace-task-events" class="workspace-task-events"></div>
+          </section>
+        </section>
+        <div id="workspace-chat-view" aria-label="Chat" hidden>
+        <section id="workspace-mcp" class="workspace-mcp" aria-labelledby="workspace-mcp-title">
+          <div class="section-heading"><h2 id="workspace-mcp-title">Réseau des agents</h2><p id="workspace-graph-summary">Chargement des échanges…</p></div>
+          <div class="workspace-graph-legend" aria-label="Légende des statuts"><span><i class="workspace-dot is-working"></i> Au travail</span><span><i class="workspace-dot is-attention"></i> Action requise</span><span><i class="workspace-dot is-error"></i> Erreur</span><span><i class="workspace-dot is-idle"></i> Disponible</span></div>
+          <div class="workspace-graph-scroll"><div id="workspace-graph" class="workspace-graph" aria-label="Graphe des échanges observés entre agents"></div><p id="workspace-graph-empty" class="workspace-graph-empty" hidden>Aucun agent n’a encore échangé de message.</p></div>
+          <p class="workspace-graph-note">Seuls les agents disponibles ayant envoyé ou reçu un message figurent ici. Les flèches correspondent à des messages privés ou à des réponses explicites dans un channel.</p>
+        </section>
+        <section class="workspace-chat-section" aria-labelledby="workspace-chat-title">
+          <div class="section-heading"><h2 id="workspace-chat-title">Messages</h2><p>Historique par channel</p></div>
+          <div class="workspace-chat-layout">
+            <div class="workspace-chat-index">
+              <div class="workspace-chat-index-heading"><strong>Channels</strong><span id="workspace-conversation-count">0</span></div>
+              <div id="workspace-conversation-list" class="workspace-conversation-list" aria-label="Channels disponibles"><p class="empty">Chargement…</p></div>
+              <div class="workspace-chat-index-heading workspace-agent-index-heading"><strong>Agents disponibles</strong><span id="workspace-agent-count">0</span></div>
+              <div id="workspace-agent-list" class="workspace-agent-list" aria-label="Agents actuellement disponibles"></div>
+            </div>
+            <div class="workspace-chat-main">
+              <div class="workspace-chat-heading"><div><h3 id="workspace-chat-peer">Sélectionnez un channel</h3><p id="workspace-chat-detail">Les messages apparaîtront ici.</p><button id="workspace-clear-filter" type="button" hidden>Afficher tout le channel</button></div><span id="workspace-chat-total"></span></div>
+              <div id="workspace-outbox" class="workspace-outbox" hidden aria-label="Messages en attente sur ce workspace"></div>
+              <form id="workspace-spawn-form" class="workspace-spawn-form">
+                <label for="workspace-spawn-account">Compte</label><select id="workspace-spawn-account" required></select>
+                <button id="workspace-spawn-button" type="submit">Lancer un agent Codex CLI</button>
+                <span id="workspace-launch-status" role="status"></span>
+                <button id="workspace-dismiss-button" type="button" hidden>Masquer l’erreur</button>
+              </form>
+              <div id="workspace-channel-members" class="workspace-channel-members" aria-label="Participants du channel"></div>
+              <button id="workspace-join-button" class="workspace-join-button" type="button" hidden>Ajouter cet agent au channel partagé</button>
+              <section id="workspace-diagnostics" class="workspace-diagnostics" hidden aria-label="Configuration de l’agent sélectionné">
+                <div class="workspace-diagnostics-heading"><strong>Configuration de l’agent</strong><button id="workspace-check-button" type="button">Vérifier</button></div>
+                <p id="workspace-agent-summary"></p>
+                <p id="workspace-check-summary">Sélectionnez Vérifier pour contrôler GitHub, MCP et hooks.</p>
+                <div id="workspace-check-results"></div>
+                <div class="workspace-agent-history"><strong>Derniers échanges</strong><div id="workspace-agent-history"></div></div>
+              </section>
+              <button id="workspace-load-older" class="workspace-load-older" type="button" hidden>Afficher les messages précédents</button>
+              <ol id="workspace-message-list" class="workspace-message-list" aria-live="polite"><li class="empty">Aucun channel sélectionné.</li></ol>
+              <form id="workspace-compose" class="workspace-compose">
+                <label for="workspace-recipient">À</label><select id="workspace-recipient" required><option value="">Choisir un agent CLI</option></select>
+                <button id="workspace-stop-button" type="button" disabled>Arrêter</button>
+                <label class="workspace-compose-label" for="workspace-input">Message</label>
+                <textarea id="workspace-input" rows="2" maxlength="10000" placeholder="Écrire dans ce channel…" required></textarea>
+                <button id="workspace-send-button" type="submit">Envoyer</button>
+                <span id="workspace-compose-status" role="status"></span>
+              </form>
+            </div>
+          </div>
+        </section>
+        </div>
+      </main>
+
+      <footer class="app-footer"><span>Codex Manager</span><span id="footer-time"></span></footer>
+    </div>
+  </div>
+</body>
+</html>

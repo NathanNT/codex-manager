@@ -1,0 +1,30 @@
+{
+  "name": "codex-supervision-presence",
+  "displayName": "Codex Manager Presence",
+  "description": "Reports each VS Code window's presence to the local Codex Manager dashboard.",
+  "repository": { "type": "git", "url": "https://github.com/NathanNT/codex-manager.git" },
+  "version": "0.1.0",
+  "publisher": "local-codex-supervision",
+  "private": true,
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Codex Manager",
+      "properties": {
+        "codexSupervision.accountId": {
+          "type": "string",
+          "default": "",
+          "description": "Account ID (compte-1 or compte-2). If empty, inferred from CODEX_HOME."
+        },
+        "codexSupervision.port": {
+          "type": "number",
+          "default": 8765,
+          "description": "Local Codex Manager backend port."
+        }
+      }
+    }
+  }
+}
